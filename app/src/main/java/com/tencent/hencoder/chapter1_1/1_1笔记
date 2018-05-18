@@ -1,0 +1,68 @@
+一、关键点
+    1、自定义绘制的方式是重写绘制方法，其中最常用的是onDraw()
+    2、绘制的关键是Canvas的使用：
+        .Canvas的绘制类方法：drawXXX()  (关键参数：Paint)；
+        .Canvas的辅助类方法：范围剪切和几何变换；
+        .可以使用不同的绘制方法来控制遮盖关系。
+
+二、自定义绘制知识的四个级别
+    1、Canvas 的 drawXXX() 系列方法及 Paint 最常见的使用
+    2、Paint 完全攻略
+        可以设置颜色，实心空心，线条粗细，有没有阴影，拐角形状，线性过滤，加不加特效
+    3、Canvas 对绘制的辅助——范围裁切和几何变换。
+    4、使用不同的绘制方法来控制绘制顺序（性能问题）
+
+三、Canvas.drawXXX() 和 Paint 基础
+
+    Canvas 类下的所有 draw- 打头的方法，例如 drawCircle() drawBitmap()。
+    Paint 类的几个最常用的方法。具体是：
+    Paint.setStyle(Style style) 设置绘制模式
+    Paint.setColor(int color) 设置颜色
+    Paint.setStrokeWidth(float width) 设置线条宽度 单位像素
+    Paint.setTextSize(float textSize) 设置文字大小
+    Paint.setAntiAlias(boolean aa) 设置抗锯齿开关
+
+    Canvas.drawColor(@ColorInt int color) 颜色填充
+    drawRGB(int r, int g, int b)
+    drawARGB(int a, int r, int g, int b)
+    这类颜色填充方法一般用于在绘制之前设置底色，或者在绘制之后为界面设置半透明蒙版。
+
+    drawCircle(float centerX, float centerY, float radius, Paint paint) 画圆
+    drawRect(float left, float top, float right, float bottom, Paint paint) 画矩形
+
+    drawPoint(float x, float y, Paint paint) 画点（点的大小可以通过 paint.setStrokeWidth(width) 来设置；点的形状可以通过  paint.setStrokeCap(cap) 来设置：ROUND 画出来是圆形的点，SQUARE 或 BUTT 画出来是方形的点。）
+    注：Paint.setStrokeCap(cap) 可以设置点的形状，但这个方法并不是专门用来设置点的形状的，而是一个设置线条端点形状的方法。端点有圆头 (ROUND)、平头 (BUTT) 和方头 (SQUARE) 三种，具体会在下一节里面讲。
+
+    drawPoints(float[] pts, int offset, int count, Paint paint) / drawPoints(float[] pts, Paint paint) 画点（批量）
+
+    drawOval(float left, float top, float right, float bottom, Paint paint) 画椭圆  （只能绘制横着的或者竖着的椭圆，不能绘制斜的（斜的倒是也可以，但不是直接使用 drawOval()，而是配合几何变换，后面会讲到））
+    drawOval(RectF rect, Paint paint)
+
+    drawLine(float startX, float startY, float stopX, float stopY, Paint paint) 画线
+    drawLines(float[] pts, int offset, int count, Paint paint) / drawLines(float[] pts, Paint paint) 画线（批量）
+
+    drawRoundRect(float left, float top, float right, float bottom, float rx, float ry, Paint paint) 画圆角矩形
+
+    drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean useCenter, Paint paint) 绘制弧形或扇形
+
+    drawPath(Path path, Paint paint) 画自定义图形（Path 有两类方法，一类是直接描述路径的，另一类是辅助的设置或计算。）
+    addOval(float left, float top, float right, float bottom, Direction dir) / addOval(RectF oval, Direction dir) 添加椭圆
+    addRect(float left, float top, float right, float bottom, Direction dir) / addRect(RectF rect, Direction dir) 添加矩形
+    addRoundRect(RectF rect, float rx, float ry, Direction dir) / addRoundRect(float left, float top, float right, float bottom, float rx, float ry, Direction dir) / addRoundRect(RectF rect, float[] radii, Direction dir) / addRoundRect(float left, float top, float right, float bottom, float[] radii, Direction dir) 添加圆角矩形
+    addPath(Path path) 添加另一个 Path
+    lineTo(float x, float y) / rLineTo(float x, float y) 画直线从当前位置向目标位置画一条直线， x 和 y 是目标位置的坐标。这两个方法的区别是，lineTo(x, y) 的参数是绝对坐标，而 rLineTo(x, y) 的参数是相对当前位置的相对坐标
+    quadTo(float x1, float y1, float x2, float y2) / rQuadTo(float dx1, float dy1, float dx2, float dy2) 画二次贝塞尔曲线  这条二次贝塞尔曲线的起点就是当前位置，而参数中的 x1, y1 和 x2, y2 则分别是控制点和终点的坐标。和 rLineTo(x, y) 同理，rQuadTo(dx1, dy1, dx2, dy2) 的参数也是相对坐标
+    cubicTo(float x1, float y1, float x2, float y2, float x3, float y3) / rCubicTo(float x1, float y1, float x2, float y2, float x3, float y3) 画三次贝塞尔曲线
+
+
+
+
+
+
+
+
+
+
+
+
+
